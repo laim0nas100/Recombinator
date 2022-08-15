@@ -1,0 +1,26 @@
+
+
+# this is a comment
+labadiena #more comment
+token //comment
+
+# out /*
+    main.stackTrace = false;
+    main.surroundString = false;
+    main.threadName = false;
+        
+*/
+
+
+/*
+
+comment
+    /*
+
+    nested
+    */
+
+out
+*/
+
+more text

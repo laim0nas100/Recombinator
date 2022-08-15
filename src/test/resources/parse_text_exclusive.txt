@@ -1,0 +1,16 @@
+text2
+//comment 2  nested comment/*
+    not_hide_2
+*/
+/*
+    hide_1
+*/
+text1
+#comment 1
+
+OK_TEXT
+/*
+ok
+*/
+
+ending

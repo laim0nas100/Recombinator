@@ -1,0 +1,7 @@
+{"hydratable":"anonymousId","data":"743568-646266-596455-944888"}
+some_string = "hello_world";
+escaped = "hello \" ok;
+"
+ending
+
+{"attribute":"data"}

@@ -1,0 +1,13 @@
+text2
+//comment 2/*
+not_hide_2
+*/
+/*
+hide_1  "inside"
+*/
+text1
+#comment 1
+some_string = "hello_world";
+escaped = "hello \" ok;
+"
+ending

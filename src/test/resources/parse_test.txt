@@ -1,0 +1,6 @@
+🍕
+keyboard ⌨
+pizza 🍕
+heart ♥
+snowman ☃
+EOF

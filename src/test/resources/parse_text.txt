@@ -1,0 +1,74 @@
+End15near
+labas 1+1.10
+int i = 10++;
+ok
+
+# this is a comment
+labadiena #more comment
+token //comment
+labas 12+32.03+0
+float j = 10.133++;
+
+# out /*
+    main.stackTrace = false;
+    main.surroundString = false;
+    main.threadName = false;
+        
+   
+*/
+some_text
+
+/*
+    1main.stackTrace = false;
+    2main.surroundString = false;
+    3main.threadName = false;
+    4main.stackTrace = false;
+    5main.surroundString = false;
+    6main.threadName = false;
+    7main.stackTrace = false;
+    8main.surroundString = false;
+    9main.threadName = false;
+    10main.stackTrace = false;
+    11main.surroundString = false;
+    12main.threadName = false;
+    13main.stackTrace = false;
+    14main.surroundString = false;
+    15main.threadName = false;
+    16main.stackTrace = false;
+    17main.surroundString = false;
+    18main.threadName = false;
+    19main.stackTrace = false;
+    20main.surroundString = false;
+    21main.threadName = false;
+    22main.stackTrace = false;
+    23main.surroundString = false;
+    24main.threadName = false;
+*/ labas
+OK
+
+NO COMMENTS, just pure text
+
+    1main.stackTrace = false;
+    2main.surroundString = false;
+    3main.threadName = false;
+    4main.stackTrace = false;
+    5main.surroundString = false;
+    6main.threadName = false;
+    7main.stackTrace = false;
+    8main.surroundString = false;
+    9main.threadName = false;
+    10main.stackTrace = false;
+    11main.surroundString = false;
+    12main.threadName = false;
+    13main.stackTrace = false;
+    14main.surroundString = false;
+    15main.threadName = false;
+    16main.stackTrace = false;
+    17main.surroundString = false;
+    18main.threadName = false;
+    19main.stackTrace = false;
+    20main.surroundString = false;
+    21main.threadName = false;
+    22main.stackTrace = false;
+    23main.surroundString = false;
+    24main.threadName = false;

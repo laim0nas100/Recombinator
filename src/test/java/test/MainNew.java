@@ -1,0 +1,80 @@
+package test;
+
+import java.io.File;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import lt.lb.recombinator.PosMatch;
+import lt.lb.recombinator.PosMatched;
+import lt.lb.recombinator.Utils;
+import lt.lb.recombinator.impl.SimpleMatchImplLegacy;
+import lt.lb.recombinator.impl.codepoint.CodepointMatchersLegacy;
+import lt.lb.recombinator.peekable.SimplePeekableIterator;
+
+/**
+ *
+ * @author laim0nas100
+ */
+public class MainNew {
+
+    static boolean bench = true;
+
+    public static void main(String[] args) throws Exception {
+        URL resource;
+        if (bench) {
+            resource = MainNew.class.getResource("/bible.txt");
+        } else {
+            resource = MainNew.class.getResource("/parse_test.txt");
+        }
+
+        System.setOut(new PrintStream(System.out, true, "UTF8")); // Essential!
+
+        String term = "\nok1 ok2\n *hell?o??" + " NOT  **something else?* regular";
+
+        term += "你好, おはよう, α-Ω\uD834\uDD1E";
+
+//        term = "\uD834\uDD1E";
+        SimplePeekableIterator<Integer> ofReaderCodepoints = Utils.peekableReaderCodepoints(Files.newBufferedReader(Paths.get(resource.toURI()), StandardCharsets.UTF_8));
+
+//        ofReaderCodepoints = new SimplePeekableIterator<>(ofReaderCodepoints.toStream().collect(Collectors.toList()).iterator());
+//        SimplePeekableIterator<Integer> ofReaderCodepoints = PeekableIterator.ofReaderChars2(new ReusableStringReader(term));
+        CodepointMatchersLegacy ch = new CodepointMatchersLegacy();
+        List<PosMatch<String, Integer>> list = Arrays.asList(
+                //                ch.makeNew("Any").repeating(false).any(1),
+                ch.whitespace(),
+                ch.letters(),
+                ch.digits(),
+                ch.makeNew("Any").repeating(false).importance(-1).any(1)
+        );
+        SimpleMatchImplLegacy<String, Integer> simpleMatch = new SimpleMatchImplLegacy<>(ofReaderCodepoints, list);
+
+        if (bench) {
+
+            long time = System.currentTimeMillis();
+            long count = simpleMatch.toStream().count();
+
+            time = System.currentTimeMillis() - time;
+            System.out.println(time);
+            System.out.println(count);
+
+            return;
+        }
+        List<PosMatched<String, Integer>> all = simpleMatch.tryMatchAll();
+        for (PosMatched<String, Integer> pm : all) {
+            System.out.println(pm.matchedBy() + " tokens=" + pm.items().stream().map(Utils::fromCodepoint).collect(Collectors.joining()));
+        }
+
+        try ( PrintWriter writer = new PrintWriter(new File("out.txt"), "UTF-8")) {
+            for (PosMatched<String, Integer> pm : all) {
+                writer.println(pm.matchedBy() + " tokens=" + pm.items().stream().map(Utils::fromCodepoint).collect(Collectors.joining()));
+            }
+        }
+
+    }
+}
