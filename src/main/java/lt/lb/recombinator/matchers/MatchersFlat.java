@@ -7,10 +7,8 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lt.lb.recombinator.PosMatch;
 import lt.lb.recombinator.FlatMatched;
 import lt.lb.recombinator.PosMatch;
-import lt.lb.recombinator.PosMatched;
 
 /**
  *

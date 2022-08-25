@@ -2,13 +2,8 @@ package lt.lb.recombinator.matchers;
 
 import java.util.Collection;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lt.lb.recombinator.PosMatch;
-import lt.lb.recombinator.impl.SimpleMatchersImpl.BaseMatchers;
-import lt.lb.recombinator.FlatMatched;
 
 /**
  *
@@ -25,10 +20,6 @@ public abstract class Matchers<I, T, P extends PosMatch<I, T>, M extends Matcher
     protected I name;
     protected boolean repeating;
     protected int importance;
-
-    public static <I, T> BaseMatchers<I, T> simple() {
-        return new BaseMatchers<>();
-    }
 
     public M makeNew(I name) {
         Objects.requireNonNull(name);

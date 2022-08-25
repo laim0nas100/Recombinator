@@ -1,11 +1,8 @@
 package lt.lb.recombinator.impl.codepoint;
 
-import java.util.Locale;
 import java.util.Objects;
 import lt.lb.recombinator.DelegatedPosMatch;
 import lt.lb.recombinator.PosMatch;
-import lt.lb.recombinator.impl.SimplePosMatch;
-import lt.lb.recombinator.matchers.Matchers;
 import lt.lb.recombinator.matchers.MatchersFlat;
 import lt.lb.recombinator.FlatMatched;
 import lt.lb.recombinator.impl.codepoint.StringMatchers.StringPosMatch;
@@ -32,12 +29,6 @@ public class StringMatchers extends MatchersFlat<String, String, FlatMatched<Str
         return this;
     }
 
-//    
-//    @Override
-//    protected PosMatch<String, FlatMatched<String, String>> simpleType(PosMatch<String, ? super FlatMatched<String, String>> posMatched) {
-//        Objects.requireNonNull(posMatched);
-//        return (DelegatedPosMatch<String, FlatMatched<String, String>>) () -> (PosMatch<String, FlatMatched<String, String>>) posMatched;
-//    }
     @Override
     protected StringPosMatch simpleType(PosMatch<String, ? super FlatMatched<String, String>> posMatched) {
         Objects.requireNonNull(posMatched);

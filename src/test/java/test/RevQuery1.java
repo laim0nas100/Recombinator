@@ -13,14 +13,12 @@ import lt.lb.commons.DLog;
 import lt.lb.commons.benchmarking.Benchmark;
 import lt.lb.luceneindexandsearch.indexing.content.Premade;
 import lt.lb.luceneindexandsearch.indexing.content.SimpleAnalyzer;
-import lt.lb.recombinator.PosMatch;
 import lt.lb.recombinator.Recombinator;
 import lt.lb.recombinator.Utils;
 import lt.lb.recombinator.impl.FlatMatchedSimple;
 import lt.lb.recombinator.impl.SimpleMatchFinder;
 import lt.lb.recombinator.impl.SimpleMatchImpl;
 import lt.lb.recombinator.impl.codepoint.CodepointMatchers;
-import lt.lb.recombinator.impl.codepoint.CodepointPosMatch;
 import lt.lb.recombinator.impl.codepoint.StringMatchers;
 import lt.lb.recombinator.peekable.PeekableIterator;
 import org.apache.commons.lang3.RegExUtils;
@@ -35,6 +33,7 @@ import org.apache.lucene.search.Query;
 import lt.lb.recombinator.FlatMatched;
 import lt.lb.recombinator.PosMatched;
 import lt.lb.recombinator.impl.PosMatchedSimple;
+import lt.lb.recombinator.impl.codepoint.CodepointMatchers.CodepointPosMatch;
 import lt.lb.recombinator.impl.codepoint.StringMatchers.StringPosMatch;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.index.Term;
@@ -81,9 +80,9 @@ public class RevQuery1 {
     public static final StringPosMatch concatable = S.makeNew("concatable").orNames(text, wildStarEsc, wildQuestionEsc);
     public static final StringPosMatch wildCard = S.makeNew("wild_card").orNames(wildStar, wildQuestion);
     public static final StringPosMatch gate = S.makeNew("gate").orNames(and, or, not);
-    public static final StringPosMatch or_L = S.makeNew("lifted_or").orNames(OPERATOR_OR);
-    public static final StringPosMatch and_L = S.makeNew("lifted_and").orNames(OPERATOR_AND);
-    public static final StringPosMatch not_L = S.makeNew("lifted_not").orNames(OPERATOR_NOT);
+//    public static final StringPosMatch or_L = S.makeNew("lifted_or").orNames(OPERATOR_OR);
+//    public static final StringPosMatch and_L = S.makeNew("lifted_and").orNames(OPERATOR_AND);
+//    public static final StringPosMatch not_L = S.makeNew("lifted_not").orNames(OPERATOR_NOT);
 
     // 3-rd pass
     public static final StringPosMatch wildCard_word = S.makeNew("wildCard_word").concat(wildCard, concatable);
@@ -94,14 +93,16 @@ public class RevQuery1 {
             Arrays.asList(
                     wildQuestion, wildStar,
                     and, or, not,
-                    text, literal
+                    text
             )
     );
 
     public static final SimpleMatchFinder<String, FlatMatched<String, String>> simpleFlatMatchFinder1 = new SimpleMatchFinder<>(
             Arrays.asList(
-                    wildCard_word_wildcard, word_wildCard, wildCard_word, wildCard,
-                    gate, and_L, or_L, not_L, concatable)
+                    wildCard_word_wildcard, word_wildCard, wildCard_word, wildCard, concatable
+                    ,gate  
+//                    ,and_L, or_L, not_L
+            )
     );
 
     public static CodepointPosMatch exact(String str) {
@@ -140,10 +141,8 @@ public class RevQuery1 {
         return tokenizeTerms(tokenize, analyzer).stream().collect(Collectors.joining(" "));
     }
 
-    public static Recombinator<String, Integer> buildTokenizer(String str) {
-        return new SimpleMatchImpl<>(Utils.peekableCodepoints(str), simpleMatchFinder);
-    }
-
+    
+    private static final String WILDCARD = OPERATOR_WILD_STAR + OPERATOR_WILD_QUESTION;
     public static Query buildQuery(final String search, Analyzer analyzer, String fieldName, String revFieldName, boolean allowAll, BooleanClause.Occur defaultOccur) throws Exception {
 
         String replaced = RegExUtils.replaceAll(search, REPLACE_REPEATING_WILDCARD, "*");
@@ -174,7 +173,6 @@ public class RevQuery1 {
                     if (unmatched) {
                         id.addAll(fm.matchedBy());
                     }
-
                     sb.add(fm.getItem());
                 });
                 if (id.isEmpty()) {
@@ -241,15 +239,13 @@ public class RevQuery1 {
                     rev.addAll(0, ma.getItems(1, 0));
                     needreverse = true;
                 } else if (ma.containsMatcher(gate)) {
-
                     occurChanged = true;
-                    if (ma.containsMatcher(and_L)) {
+                    if (ma.containsItem(OPERATOR_AND)) {
                         nextOccur = BooleanClause.Occur.MUST;
-                    } else if (ma.containsMatcher(or_L)) {
+                    } else if (ma.containsItem(OPERATOR_OR)) {
                         nextOccur = BooleanClause.Occur.SHOULD;
-                    } else if (ma.containsMatcher(not_L)) {
+                    } else if (ma.containsItem(OPERATOR_NOT)) {
                         nextOccur = BooleanClause.Occur.MUST_NOT;
-
                     }
                 } else if (ma.containsMatcher(concatable)) {
                     q.addAll(ma.getItems(0));
@@ -264,7 +260,7 @@ public class RevQuery1 {
 
             List<Query> querys = new ArrayList<>();
             if (needregular) {
-                while (!q.isEmpty() && (OPERATOR_WILD_STAR + OPERATOR_WILD_QUESTION).contains(q.getFirst())) {
+                while (!q.isEmpty() && WILDCARD.contains(q.getFirst())) {
                     // need to remove first wild card
                     q.removeFirst();
                 }
@@ -272,7 +268,7 @@ public class RevQuery1 {
 
             }
             if (needreverse) {
-                while (!rev.isEmpty() && (OPERATOR_WILD_STAR + OPERATOR_WILD_QUESTION).contains(rev.getFirst())) {
+                while (!rev.isEmpty() && WILDCARD.contains(rev.getFirst())) {
                     // need to remove first wild card
                     rev.removeFirst();
                 }

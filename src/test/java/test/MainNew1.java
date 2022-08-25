@@ -15,8 +15,8 @@ import lt.lb.recombinator.PosMatched;
 import lt.lb.recombinator.Utils;
 import lt.lb.recombinator.impl.SimpleMatchFinder;
 import lt.lb.recombinator.impl.SimpleMatchImpl;
-import lt.lb.recombinator.impl.codepoint.CodepointMatchersLegacy;
 import lt.lb.recombinator.Recombinator;
+import lt.lb.recombinator.impl.codepoint.CodepointMatchers;
 import lt.lb.recombinator.peekable.SimplePeekableIterator;
 
 /**
@@ -42,7 +42,7 @@ public class MainNew1 {
 
 //        ofReaderCodepoints = new SimplePeekableIterator<>(ofReaderCodepoints.toStream().collect(Collectors.toList()).iterator());
 //        SimplePeekableIterator<Integer> ofReaderCodepoints = PeekableIterator.ofReaderChars2(new ReusableStringReader(term));
-        CodepointMatchersLegacy ch = new CodepointMatchersLegacy();
+        CodepointMatchers ch = new CodepointMatchers();
         List<PosMatch<String, Integer>> list = Arrays.asList(
                 ch.whitespace(),
                 ch.letters(),
